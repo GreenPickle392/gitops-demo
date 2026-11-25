@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Values.site.title }}</title>
+<style>
+  @property --accent { syntax: '<color>'; inherits: true; initial-value: #8b5cf6; }
+  :root { --accent: {{ .Values.site.accentColor }}; transition: --accent 1.2s ease; }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    min-height: 100vh; display: grid; place-items: center; overflow: hidden;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: #0b0d14; color: #e8eaf2;
+  }
+  .glow {
+    position: fixed; inset: -20%; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(40% 40% at 25% 30%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%),
+      radial-gradient(35% 35% at 75% 70%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%);
+    filter: blur(40px); animation: drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate(4%, -3%) scale(1.08); } }
+  .card {
+    position: relative; z-index: 1; width: min(880px, 92vw); padding: 56px 56px 40px;
+    border-radius: 28px; background: rgba(20, 22, 34, .55);
+    border: 1px solid rgba(255,255,255,.08); backdrop-filter: blur(18px);
+    box-shadow: 0 30px 80px rgba(0,0,0,.45);
+  }
+  .live { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: .08em;
+    text-transform: uppercase; color: #9aa0b4; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 #22c55e;
+    animation: pulse 1.8s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+  .emoji { font-size: 72px; line-height: 1; margin: 28px 0 12px; display: inline-block; transition: transform .6s; }
+  h1 { font-size: clamp(40px, 6vw, 68px); line-height: 1.05; letter-spacing: -.02em; font-weight: 800;
+    background: linear-gradient(90deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { margin-top: 16px; font-size: 20px; color: #b7bccd; }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr 1.2fr; gap: 14px; margin-top: 40px; }
+  .tile { padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); }
+  .tile .k { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #8a90a6; }
+  .tile .v { margin-top: 6px; font-size: 18px; font-weight: 600; font-family: ui-monospace, Menlo, Consolas, monospace;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pods { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; min-height: 28px; }
+  .pod { font: 600 12px ui-monospace, Menlo, Consolas, monospace; padding: 5px 10px; border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 25%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    animation: popin .4s ease; }
+  @keyframes popin { from { transform: scale(.6); opacity: 0; } }
+  .foot { margin-top: 32px; display: flex; gap: 10px; flex-wrap: wrap; font-size: 13px; color: #8a90a6; }
+  .foot span { padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.1); }
+  .toast { position: fixed; top: 0; left: 50%; transform: translate(-50%, -120%); z-index: 2;
+    padding: 12px 22px; border-radius: 999px; font-weight: 700; background: var(--accent); color: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4); transition: transform .5s cubic-bezier(.2,1.4,.4,1); }
+  .toast.show { transform: translate(-50%, 28px); }
+  .bump { animation: bump .7s ease; }
+  @keyframes bump { 40% { transform: scale(1.04); } }
+</style>
+</head>
+<body data-pod="<!--# echo var="hostname" -->" data-version="<!--# echo var="nginx_version" -->" data-accent="{{ .Values.site.accentColor }}">
+<div class="glow"></div>
+<div class="toast" id="toast">Neu ausgerollt ✨</div>
+<main class="card" id="card">
+  <div class="live"><span class="dot"></span> Live aus dem Kubernetes-Cluster</div>
+  <div><span class="emoji" id="emoji">{{ .Values.site.emoji }}</span></div>
+  <h1 id="title">{{ .Values.site.title }}</h1>
+  <p class="sub" id="subtitle">{{ .Values.site.subtitle }}</p>
+
+  <div class="grid">
+    <div class="tile"><div class="k">Antwortender Pod</div><div class="v" id="pod"><!--# echo var="hostname" --></div></div>
+    <div class="tile"><div class="k">nginx-Version</div><div class="v" id="version"><!--# echo var="nginx_version" --></div></div>
+    <div class="tile"><div class="k">Pods im Einsatz</div><div class="pods" id="pods"></div></div>
+  </div>
+
+  <div class="foot"><span>Git-Commit</span><span>→ Argo CD</span><span>→ Kubernetes</span><span>Kein manueller Eingriff</span></div>
+</main>
+
+<script>
+  var seen = {};
+  var current = null;
+
+  function snapshot(doc) {
+    var b = doc.body;
+    return {
+      title: doc.getElementById('title').textContent,
+      subtitle: doc.getElementById('subtitle').textContent,
+      emoji: doc.getElementById('emoji').textContent,
+      accent: b.getAttribute('data-accent'),
+      pod: b.getAttribute('data-pod'),
+      version: b.getAttribute('data-version')
+    };
+  }
+
+  function apply(s) {
+    var changed = current && (s.title !== current.title || s.subtitle !== current.subtitle ||
+      s.emoji !== current.emoji || s.accent !== current.accent || s.version !== current.version);
+    document.getElementById('title').textContent = s.title;
+    document.getElementById('subtitle').textContent = s.subtitle;
+    document.getElementById('emoji').textContent = s.emoji;
+    document.getElementById('pod').textContent = s.pod;
+    document.getElementById('version').textContent = s.version;
+    document.documentElement.style.setProperty('--accent', s.accent);
+    if (changed) {
+      var t = document.getElementById('toast');
+      t.classList.add('show'); setTimeout(function () { t.classList.remove('show'); }, 2500);
+      var c = document.getElementById('card');
+      c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    }
+    current = s;
+  }
+
+  function renderPods() {
+    var now = Date.now(), box = document.getElementById('pods');
+    Object.keys(seen).forEach(function (p) { if (now - seen[p] > 6000) delete seen[p]; });
+    var names = Object.keys(seen).sort();
+    if (box.dataset.names === names.join(',')) return;
+    box.dataset.names = names.join(',');
+    box.innerHTML = '';
+    names.forEach(function (p) {
+      var el = document.createElement('span');
+      el.className = 'pod'; el.textContent = p.split('-').slice(-1)[0];
+      el.title = p; box.appendChild(el);
+    });
+  }
+
+  function poll() {
+    fetch('/', { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var s = snapshot(new DOMParser().parseFromString(html, 'text/html'));
+        seen[s.pod] = Date.now();
+        apply(s);
+        renderPods();
+      })
+      .catch(function () {});
+  }
+
+  current = snapshot(document);
+  seen[current.pod] = Date.now();
+  renderPods();
+  setInterval(poll, 700);
+</script>
+</body>
+</html>

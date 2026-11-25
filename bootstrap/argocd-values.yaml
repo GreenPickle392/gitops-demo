@@ -1,0 +1,22 @@
+# Helm values for the Argo CD chart (argo/argo-cd), tuned for a local demo.
+global:
+  domain: argocd.localhost
+
+configs:
+  params:
+    server.insecure: true            # plain HTTP behind Traefik, no TLS for the demo
+  cm:
+    timeout.reconciliation: 20s      # poll Git every 20 s (default ~3 min)
+    timeout.reconciliation.jitter: 0s
+    admin.enabled: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik        # hostname defaults to global.domain
+
+# Not needed for the demo -> fewer pods, faster start
+dex:
+  enabled: false
+notifications:
+  enabled: false

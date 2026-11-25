@@ -1,0 +1,13 @@
+# local helpers / working files
+node_modules/
+*.tmp
+*.log
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+~$*
+.~lock.*#
+# source material, not part of the repo
+gitops-demo.zip
+claude-code-prompt.md
