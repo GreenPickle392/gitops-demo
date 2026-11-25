@@ -52,12 +52,12 @@ if (-not $NurFolien) {
     # For the ODT: diagram as image, images scaled to page width
     $odtMd = $md.Remove($m.Index, $m.Length).Insert($m.Index, '![Ablauf: vom Commit bis in den Browser](img/ablauf.png){width=16cm}')
     $odtMd = ([regex]'(?m)^# .*\r?\n').Replace($odtMd, '', 1)   # title comes from metadata
-    $odtMd = [regex]::Replace($odtMd, '(!\[[^\]]*\]\(img/(website|argocd-tree)\.png\))', '$1{width=16cm}')
+    $odtMd = [regex]::Replace($odtMd, '(!\[[^\]]*\]\(img/[^)]+\.png\))', '$1{width=16cm}')
     [IO.File]::WriteAllText("$tmp\Anleitung.md", $odtMd, $utf8)
     Push-Location (Join-Path $RepoRoot 'docs')
     try {
         $r = Invoke-Native $pandoc @("$tmp\Anleitung.md", '-f', 'gfm+attributes', '-t', 'odt', '-o', 'Anleitung.odt',
-            '--resource-path=.', '--metadata', 'title=GitOps-Demo – Anleitung', '--metadata', 'lang=de-DE')
+            '--resource-path=.', '--metadata', 'title=GitOps-Demo – Spickzettel', '--metadata', 'lang=de-DE')
     } finally { Pop-Location }
     if ($r.Code -ne 0) { Stop-Demo "pandoc fehlgeschlagen:`n$($r.Out)" }
     Write-Ok "docs/Anleitung.odt"

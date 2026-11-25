@@ -123,7 +123,7 @@ Rechts seht ihr, wie Argo CD das darstellt: Die App, darunter Deployment, Replic
 <!--
 (ca. 1:00)
 Der Kreislauf: Ich ändere etwas und pushe es ins Repo. Argo CD holt sich den Stand, das ist ein Pull, kein Push von außen.
-Es wendet die Änderung im Cluster an. Und wenn jemand am Cluster vorbei etwas ändert, merkt Argo CD die Abweichung und dreht sie zurück. Das heißt Self-Heal.
+Mit Sync wendet es die Änderung im Cluster an. Und wenn jemand am Cluster vorbei etwas ändert, merkt Argo CD die Abweichung und stellt den Git-Stand wieder her: in der Demo per Klick auf SYNC, im echten Betrieb automatisch (Self-Heal).
 Rollback ist einfach git revert: der letzte Commit wird rückgängig gemacht.
 -->
 
@@ -170,26 +170,25 @@ Die Seite fragt sich selbst alle 0,7 Sekunden neu ab, deshalb sehen wir Änderun
 ## Live-Demo
 
 <ol class="steps">
-  <li>Bootstrap: ein Befehl baut alles</li>
-  <li>Text, Emoji und Farbe ändern</li>
-  <li>Skalieren auf 5 Pods</li>
-  <li>Selbstheilung: <code>chaos.ps1</code></li>
-  <li>Upgrade nginx 1.27 → 1.29</li>
-  <li>Rollback per <code>git revert</code></li>
+  <li>Code in GitHub zeigen</li>
+  <li>Leeres Argo CD</li>
+  <li>Argo CD mit dem Repo verbinden → Webseite da</li>
+  <li><code>values.yaml</code> ändern → SYNC</li>
+  <li>Deployment löschen → SYNC heilt</li>
+  <li>Auf 5 Pods skalieren → SYNC</li>
 </ol>
 
-![bg right:42% contain](../docs/img/website.png)
+![bg right:38% contain](../docs/img/website.png)
 
 <!--
-(ca. 9:00 – diese Folie bleibt während der Demo stehen)
-Drehbuch siehe docs/Anleitung.md, Abschnitt 5. Kurzfassung:
-1. .\scripts\setup.ps1 -NoBrowser → Baum in Argo CD wächst.
-2. values.yaml: title, emoji, accentColor → git commit -am "Neuer Look"; git push. Hinweis: Seite springt kurz zwischen alt und neu, das ist das Rolling Update!
-3. replicaCount: 5 → Chips erscheinen, „Antwortender Pod“ wechselt.
-4. .\scripts\chaos.ps1 → Argo CD stellt in Sekunden wieder her.
-5. tag: "1.29-alpine" → Kachel nginx-Version wechselt, kein Ausfall.
-6. git revert HEAD --no-edit; git push → zurück auf 1.27.
-Ungeduldig? In Argo CD auf REFRESH klicken.
+(ca. 9:00, diese Folie bleibt während der Demo stehen)
+Ablauf siehe docs/Anleitung.md, Kurzfassung:
+1. GitHub: chart/files/index.html und chart/values.yaml zeigen.
+2. Argo CD ist leer, demo.localhost gibt 404.
+3. Settings → Repositories → CONNECT REPO (VIA HTTPS, Repo-URL) → Successful. Dann + NEW APP → EDIT AS YAML → argocd/demo-app.yaml einfügen → CREATE → SYNC. F5 auf der Webseite.
+4. values.yaml: title, emoji, accentColor → git commit -am "Neuer Look"; git push → REFRESH → OutOfSync (DIFF zeigen) → SYNC. Seite springt kurz zwischen alt und neu: Rolling Update!
+5. Beim Deployment ⋮ → Delete → App OutOfSync, Pod-Chips weg → SYNC → alles wieder da.
+6. replicaCount: 5 → push → REFRESH → SYNC → 5 Pods im Baum und als Chips.
 -->
 
 ---
