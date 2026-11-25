@@ -27,8 +27,9 @@ Write-Ok "Traefik-Ingress vorhanden"
 
 # --- 2. Argo CD --------------------------------------------------------------
 Write-Step "Argo CD installieren/aktualisieren (Helm-Chart argo-cd $ArgoChartVersion)"
-$helmArgs = @('upgrade', '--install', 'argocd', 'argo-cd',
-    '--repo', 'https://argoproj.github.io/argo-helm', '--version', $ArgoChartVersion,
+# OCI source: independent of whatever 'helm repo' entries exist on this machine.
+$helmArgs = @('upgrade', '--install', 'argocd', 'oci://ghcr.io/argoproj/argo-helm/argo-cd',
+    '--version', $ArgoChartVersion,
     '--namespace', 'argocd', '--create-namespace',
     '-f', (Join-Path $RepoRoot 'bootstrap\argocd-values.yaml'),
     '--wait', '--timeout', '10m')
@@ -103,7 +104,7 @@ Write-Ok "Root-Application angelegt – ab jetzt arbeitet nur noch Argo CD"
 $sw = [Diagnostics.Stopwatch]::StartNew(); $last = ''
 while ($true) {
     $root = Get-AppStatus 'gitops-demo'; $app = Get-AppStatus 'demo-app'
-    $line = "gitops-demo: $(if ($root) { "$($root.Sync)/$($root.Health)" } else { '…' })   demo-app: $(if ($app) { "$($app.Sync)/$($app.Health)" } else { '…' })"
+    $line = "gitops-demo: $(if ($root -and $root.Sync) { "$($root.Sync)/$($root.Health)" } else { '…' })   demo-app: $(if ($app -and $app.Sync) { "$($app.Sync)/$($app.Health)" } else { '…' })"
     if ($line -ne $last) { Write-Info ("{0,3}s  {1}" -f [int]$sw.Elapsed.TotalSeconds, $line); $last = $line }
     if ($root -and $app -and $root.Sync -eq 'Synced' -and $root.Health -eq 'Healthy' -and
         $app.Sync -eq 'Synced' -and $app.Health -eq 'Healthy') { break }
