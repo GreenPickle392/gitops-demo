@@ -4,7 +4,7 @@
     slides/praesentation.md  -> slides/praesentation.pdf + slides/praesentation.pptx
   Needs: pandoc (winget install JohnMacFarlane.Pandoc), Node.js (npx), Edge or Chrome,
          LibreOffice for the editable PPTX.
-  Usage:  powershell -ExecutionPolicy Bypass -File .\scripts\build-docs.ps1 [-NurAnleitung] [-NurFolien]
+  Usage:  powershell -ExecutionPolicy Bypass -File .\docs\build-docs.ps1 [-NurAnleitung] [-NurFolien]
 #>
 param([switch]$NurAnleitung, [switch]$NurFolien)
 $ErrorActionPreference = 'Stop'
