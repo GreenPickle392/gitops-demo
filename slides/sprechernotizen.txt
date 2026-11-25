@@ -1,70 +1,57 @@
 (ca. 0:30)
-Hallo zusammen! In den nächsten 20 Minuten zeige ich euch, wie man heute Software betreibt: mit Kubernetes und GitOps.
-Erst ein bisschen Hintergrund, dann eine Live-Demo: Ich ändere eine Datei in Git, und ihr seht zu, wie sich eine Webseite von selbst aktualisiert.
+Hallo zusammen! In den nächsten 20 Minuten zeige ich euch, wie man heute Software betreibt.
+Keine Sorge, ihr braucht kein Vorwissen. Wir fangen ganz vorne an: Was ist ein Container?
+Am Ende ändere ich live eine Datei, und ihr seht zu, wie sich eine Webseite von selbst umbaut.
+
+---
+
+(ca. 2:30)
+Stellt euch einen Schiffscontainer vor. Egal, was drin ist: Jedes Schiff, jeder Kran, jeder LKW kann ihn transportieren, weil er genormt ist.
+Ein Software-Container ist dasselbe für Programme: Ich packe meine App zusammen mit allem, was sie braucht, in eine Kiste. Also die passenden Programme, Bibliotheken und Einstellungen.
+Diese Kiste läuft dann auf meinem Laptop genauso wie auf einem Server oder in der Cloud.
+Warum ist das gut?
+Überall gleich: Das klassische „Bei mir lief's aber“ gibt es nicht mehr.
+Schnell: Ein Container startet in Sekunden, nicht in Minuten.
+Sparsam: Er bringt kein ganzes Betriebssystem mit, deshalb passen viele auf einen Rechner.
+Getrennt: Jede App hat ihre eigene Kiste. Wenn eine Probleme macht, stört sie die anderen nicht.
+
+---
+
+(ca. 2:00)
+Wenn man viele Container hat, braucht man jemanden, der aufpasst. Das ist Kubernetes.
+Ich sage Kubernetes nicht Schritt für Schritt, was es tun soll. Ich sage nur meinen Wunsch: „Ich will drei Kopien meiner Webseite.“
+Kubernetes schaut ständig nach, ob das stimmt. Stürzt eine Kopie ab, startet es sofort eine neue. Ohne dass ein Mensch nachts aufstehen muss.
+Ein Wort noch, weil es gleich in der Demo auftaucht: Einen laufenden Container nennt Kubernetes „Pod“.
+Kubernetes ist übrigens kein Nischenthema: Laut einer großen Umfrage vom Januar 2026 nutzen 82 Prozent der Firmen mit Containern Kubernetes im Echtbetrieb.
+
+---
+
+(ca. 2:00)
+Bleibt die Frage: Woher weiß Kubernetes, was ich will? Hier kommt GitOps ins Spiel.
+Git kennen viele von euch: Dort liegt Code, und jede Änderung wird gespeichert, mit Name und Datum.
+Bei GitOps liegt dort auch der Bauplan für den Betrieb: Welche App, welche Version, wie viele Kopien.
+Argo CD ist ein Helfer im Cluster. Er schaut regelmäßig in Git nach und vergleicht: Passt das, was läuft, zum Bauplan? Wenn nicht, baut er um.
+Und wenn jemand von Hand etwas verstellt, baut Argo CD es zurück, wie es im Bauplan steht.
+Hab ich einen Fehler gemacht, hole ich in Git einfach die alte Version zurück.
 
 ---
 
 (ca. 1:30)
-Kurz zu meinem Kontext: Ich arbeite an Plattform- und Cloud-Migrationen im öffentlichen Sektor.
-Ein schönes Beispiel aus der öffentlichen Welt ist eGesetzgebung: die Plattform des Bundesinnenministeriums, mit der Gesetze elektronisch entstehen.
-Der Bund hat sie als Open Source auf Open CoDE veröffentlicht, also der Code-Plattform der öffentlichen Verwaltung.
-Damit stellt sich für ein Bundesland die Frage: Können wir das nachnutzen, und läuft das in unserer Infrastruktur?
-Genau da kommen Kubernetes und GitOps ins Spiel.
+Warum macht man das so?
+Nachvollziehbar: Ich sehe in Git genau, wer wann was geändert hat.
+Rückgängig machbar: Ein Fehler ist schnell repariert, ich hole einfach die alte Version zurück.
+Wiederholbar: Geht ein Rechner kaputt, steht auf einem neuen in Minuten alles wieder, denn der Bauplan liegt ja in Git.
+Offen: Das sind offene Standards. Es läuft bei jedem Cloud-Anbieter und im eigenen Rechenzentrum.
+Ein Beispiel aus der öffentlichen Verwaltung: Der Bund hat die Software eGesetzgebung, mit der Gesetze elektronisch entstehen, als Open Source auf Open CoDE veröffentlicht. Damit andere sie bei sich betreiben können, muss sie überall gleich laufen. Genau dabei helfen Container.
 (Nur öffentliche Infos – keine Projektdetails.)
 
 ---
 
-(ca. 1:30)
-Kubernetes ist so etwas wie ein Betriebssystem fürs Rechenzentrum. Statt einzelne Server zu pflegen, sage ich: Ich will drei Instanzen meiner App in Version 1.29.
-Wie das passiert, ist Kubernetes' Job: Es verteilt die Instanzen, startet sie neu, wenn eine abstürzt, verteilt die Last und tauscht bei Updates eine nach der anderen aus, ohne Ausfall.
-
----
-
 (ca. 1:00)
-Das Grundprinzip heißt Reconciliation, also Abgleich.
-Links steht der Soll-Zustand, den ich deklariere. Rechts das, was gerade wirklich läuft.
-Kubernetes vergleicht beides ununterbrochen und gleicht an: Fällt ein Pod aus, startet ein neuer.
-Merkt euch das Prinzip „Soll gegen Ist“, denn GitOps treibt es eine Ebene weiter.
-
----
-
-(ca. 1:30)
-Ist das ein Nischenthema? Nein. Die aktuelle Umfrage der Cloud Native Computing Foundation vom Januar 2026:
-82 Prozent der Container-Nutzer betreiben Kubernetes in Produktion, 2023 waren es noch 66.
-98 Prozent der befragten Organisationen nutzen Cloud-native Techniken.
-Und Kubernetes wird zur Plattform für KI: Zwei Drittel derer, die generative KI-Modelle selbst hosten, nutzen Kubernetes dafür.
-Wichtig für uns: Es ist Open Source und herstellerneutral und läuft bei jedem Hyperscaler genauso wie im eigenen Rechenzentrum.
-
----
-
-(ca. 1:00)
-GitOps überträgt dieses Prinzip auf den ganzen Betrieb: Der Soll-Zustand steht nicht in irgendeinem Kopf oder Wiki, sondern in Git.
-Ein Controller im Cluster, bei uns Argo CD, schaut regelmäßig ins Repo und gleicht den Cluster an.
-Rechts seht ihr, wie Argo CD das darstellt: Die App, darunter Deployment, ReplicaSet, Pod, Service, Ingress. Alles grün heißt: Soll gleich Ist.
-
----
-
-(ca. 1:00)
-Der Kreislauf: Ich ändere etwas und pushe es ins Repo. Argo CD holt sich den Stand, das ist ein Pull, kein Push von außen.
-Mit Sync wendet es die Änderung im Cluster an. Und wenn jemand am Cluster vorbei etwas ändert, merkt Argo CD die Abweichung und stellt den Git-Stand wieder her: in der Demo per Klick auf SYNC, im echten Betrieb automatisch (Self-Heal).
-Rollback ist einfach git revert: der letzte Commit wird rückgängig gemacht.
-
----
-
-(ca. 1:30)
-Warum ist das zukunftssicher?
-Portabel: offene Standards. Das Repo läuft auf jedem Kubernetes, egal ob Cloud oder eigenes Rechenzentrum. Gerade im öffentlichen Sektor heißt das digitale Souveränität.
-Nachvollziehbar: Jede Änderung hat einen Autor, einen Zeitstempel und idealerweise ein Review. Das ist der Audit-Trail gratis dazu.
-Reproduzierbar: Ein neuer Cluster ist ein Befehl, das zeige ich gleich.
-Sicher: Niemand braucht Admin-Zugriff auf den Cluster, auch keine Pipeline von außen.
-Laut CNCF nutzen die reifsten Organisationen GitOps mehr als doppelt so häufig wie die Einsteiger.
-
----
-
-(ca. 1:00)
-Mein Aufbau für heute läuft komplett auf diesem Laptop: ein k3s-Cluster in Docker. Darin Argo CD und Traefik als Eingangstür.
-Das Repo liegt öffentlich auf GitHub. Die Webseite ist ein einfacher nginx. Er schreibt per Server Side Include den Namen des Pods und seine Version in die Seite. So sehen wir gleich, welcher Pod antwortet.
-Die Seite fragt sich selbst alle 0,7 Sekunden neu ab, deshalb sehen wir Änderungen ohne Neuladen.
+So sieht die Demo aus. Auf meinem Laptop läuft ein kleines Kubernetes.
+Darin laufen zwei Dinge: Argo CD und meine Webseite. Die Webseite ist ein einfacher Webserver namens nginx in einem Container.
+Der Bauplan liegt auf GitHub. Ich ändere dort eine Datei, Argo CD schaut nach und baut die Webseite um.
+Am Anfang läuft eine Kopie der Webseite, am Ende fünf.
 
 ---
 
@@ -73,18 +60,15 @@ Ablauf siehe docs/Anleitung.md, Kurzfassung:
 1. GitHub: chart/files/index.html und chart/values.yaml zeigen.
 2. Argo CD ist leer, demo.localhost gibt 404.
 3. Settings → Repositories → CONNECT REPO (VIA HTTPS, Repo-URL) → Successful. Dann + NEW APP → EDIT AS YAML → argocd/demo-app.yaml einfügen → CREATE → SYNC. F5 auf der Webseite.
-4. values.yaml: title, emoji, accentColor → git commit -am "Neuer Look"; git push → REFRESH → OutOfSync (DIFF zeigen) → SYNC. Seite springt kurz zwischen alt und neu: Rolling Update!
-5. Beim Deployment ⋮ → Delete → App OutOfSync, Pod-Chips weg → SYNC → alles wieder da.
+4. values.yaml: title, emoji, accentColor → git commit -am "Neuer Look"; git push → REFRESH → OutOfSync (DIFF zeigen) → SYNC. Die Seite springt kurz zwischen alt und neu: Der neue Pod startet, bevor der alte geht, so gibt es keinen Ausfall.
+5. Beim Kasten demo-app (deploy) ⋮ → Delete → App gelb, Pod-Chips weg → SYNC → alles wieder da.
 6. replicaCount: 5 → push → REFRESH → SYNC → 5 Pods im Baum und als Chips.
 
 ---
 
-(ca. 1:00)
+(ca. 1:30)
 Drei Dinge zum Mitnehmen:
-Erstens: Kubernetes hält den Zustand, den ich beschreibe, von selbst.
-Zweitens: GitOps macht Git zur einzigen Wahrheit. Jede Änderung ist ein Commit, und Rollback ist ein Revert.
-Drittens: Das Ganze ist offen und portabel, deshalb ist es zukunftssicher, gerade für die Verwaltung.
-
----
-
-Danke! Das Repo ist öffentlich: Mit einem Befehl baut ihr die ganze Demo auf eurem eigenen Rechner nach. Anleitung liegt in docs/Anleitung.md.
+Ein Container ist eine Kiste mit meiner App und allem, was sie braucht. Sie läuft überall gleich.
+Kubernetes passt auf die Container auf und repariert von selbst.
+Und bei GitOps ist Git der Bauplan. Argo CD sorgt dafür, dass genau das läuft, was dort steht.
+Habt ihr Fragen? Das Repo ist öffentlich, die Anleitung zum Nachbauen liegt in docs/Anleitung.md.

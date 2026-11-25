@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 270" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#c4b5fd"/>
+    </marker>
+  </defs>
+
+  <!-- the container: app + everything it needs -->
+  <rect x="20" y="15" width="400" height="240" rx="22" fill="rgba(139,92,246,.14)" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="220" y="55" text-anchor="middle" font-size="26" font-weight="800" fill="#c4b5fd">Container</text>
+  <g text-anchor="middle" font-size="22">
+    <rect x="50" y="75" width="340" height="50" rx="12" fill="#8b5cf6"/>
+    <text x="220" y="108" font-weight="700" fill="#fff">Deine App</text>
+    <rect x="50" y="135" width="340" height="50" rx="12" fill="#141622" stroke="rgba(255,255,255,.18)"/>
+    <text x="220" y="168" fill="#e8eaf2">+ alles, was sie braucht</text>
+    <rect x="50" y="195" width="340" height="40" rx="12" fill="#141622" stroke="rgba(255,255,255,.18)"/>
+    <text x="220" y="222" font-size="19" fill="#9aa0b4">Programme, Bibliotheken, Einstellungen</text>
+  </g>
+
+  <!-- arrows -->
+  <path d="M426 135 C540 135, 580 52, 702 52" stroke="#c4b5fd" stroke-width="4" fill="none" marker-end="url(#a)"/>
+  <path d="M426 135 H702" stroke="#c4b5fd" stroke-width="4" fill="none" marker-end="url(#a)"/>
+  <path d="M426 135 C540 135, 580 218, 702 218" stroke="#c4b5fd" stroke-width="4" fill="none" marker-end="url(#a)"/>
+
+  <!-- targets -->
+  <g font-size="24" font-weight="700">
+    <rect x="710" y="17" width="390" height="70" rx="16" fill="#141622" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <rect x="730" y="37" width="30" height="30" rx="6" fill="#8b5cf6"/>
+    <text x="778" y="61" fill="#fff">Dein Laptop</text>
+    <text x="1076" y="62" text-anchor="end" font-size="30" fill="#22c55e">✓</text>
+
+    <rect x="710" y="100" width="390" height="70" rx="16" fill="#141622" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <rect x="730" y="120" width="30" height="30" rx="6" fill="#8b5cf6"/>
+    <text x="778" y="144" fill="#fff">Rechenzentrum</text>
+    <text x="1076" y="145" text-anchor="end" font-size="30" fill="#22c55e">✓</text>
+
+    <rect x="710" y="183" width="390" height="70" rx="16" fill="#141622" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <rect x="730" y="203" width="30" height="30" rx="6" fill="#8b5cf6"/>
+    <text x="778" y="227" fill="#fff">Cloud</text>
+    <text x="1076" y="228" text-anchor="end" font-size="30" fill="#22c55e">✓</text>
+  </g>
+</svg>

@@ -57,6 +57,9 @@ section.lead p { color: var(--muted); font-size: 32px; }
 .grid { display: grid; gap: 22px; }
 .g2 { grid-template-columns: 1fr 1fr; }
 .g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 18px; }
+.g4 .tile { padding: 20px 22px; }
+.g4 .tile b { font-size: 27px; }
 .tile {
   background: rgba(255, 255, 255, .04); border: 1px solid var(--line);
   border-radius: 20px; padding: 24px 28px;
