@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#c4b5fd"/>
+    </marker>
+  </defs>
+
+  <!-- Soll -->
+  <rect x="20" y="80" width="310" height="210" rx="22" fill="#141622" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="175" y="130" text-anchor="middle" font-size="30" font-weight="800" fill="#c4b5fd">Soll-Zustand</text>
+  <text x="175" y="185" text-anchor="middle" font-size="30" fill="#fff">„3 × meine App,</text>
+  <text x="175" y="222" text-anchor="middle" font-size="30" fill="#fff">Version 1.29“</text>
+  <text x="175" y="266" text-anchor="middle" font-size="21" fill="#9aa0b4">deklariert, nicht programmiert</text>
+
+  <!-- Controller -->
+  <circle cx="550" cy="185" r="112" fill="rgba(139,92,246,.18)" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="550" y="172" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">Kubernetes</text>
+  <text x="550" y="208" text-anchor="middle" font-size="22" fill="#c4b5fd">vergleicht – ständig</text>
+
+  <!-- Ist -->
+  <rect x="770" y="80" width="310" height="210" rx="22" fill="#141622" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+  <text x="925" y="130" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">Ist-Zustand</text>
+  <g font-size="20" font-weight="700" text-anchor="middle">
+    <rect x="800" y="160" width="74" height="74" rx="14" fill="rgba(34,197,94,.18)" stroke="#22c55e" stroke-width="2"/>
+    <text x="837" y="204" fill="#fff">Pod</text>
+    <rect x="888" y="160" width="74" height="74" rx="14" fill="rgba(34,197,94,.18)" stroke="#22c55e" stroke-width="2"/>
+    <text x="925" y="204" fill="#fff">Pod</text>
+    <rect x="976" y="160" width="74" height="74" rx="14" fill="rgba(139,92,246,.15)" stroke="#c4b5fd" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="1013" y="204" fill="#c4b5fd">neu</text>
+  </g>
+  <text x="925" y="266" text-anchor="middle" font-size="21" fill="#9aa0b4">ein Pod fällt aus → Ersatz startet</text>
+
+  <!-- arrows -->
+  <path d="M336 185 H430" stroke="#c4b5fd" stroke-width="4" fill="none" marker-end="url(#a)"/>
+  <path d="M668 150 H762" stroke="#c4b5fd" stroke-width="4" fill="none" marker-end="url(#a)"/>
+  <text x="715" y="134" text-anchor="middle" font-size="21" fill="#c4b5fd">gleicht an</text>
+  <path d="M925 296 C925 370, 560 380, 552 304" stroke="#9aa0b4" stroke-width="3" stroke-dasharray="8 7" fill="none" marker-end="url(#a)"/>
+  <text x="760" y="378" text-anchor="middle" font-size="21" fill="#9aa0b4">beobachtet</text>
+</svg>

@@ -95,7 +95,8 @@ function Open-DemoTabs {
         try { Set-Clipboard -Value $pw; Write-Ok "Argo-CD-Passwort liegt in der Zwischenablage (Benutzer: admin)" }
         catch { Write-Info "Argo-CD-Passwort (Benutzer admin): $pw" }
     }
-    Start-Process $ArgoAppUrl
+    # Before the live bootstrap the app does not exist yet -> open the app list instead.
+    if (Get-AppStatus 'demo-app') { Start-Process $ArgoAppUrl } else { Start-Process "$ArgoUrl/applications" }
     Start-Process $DemoUrl
     Write-Ok "Browser-Tabs geöffnet: $ArgoUrl und $DemoUrl"
 }
