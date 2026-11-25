@@ -15,7 +15,7 @@ replicaCount: 3
 # Version des Webservers (Demo: Update auf "1.29-alpine")
 image:
   repository: nginx
-  tag: "1.29-alpine"
+  tag: "1.27-alpine"
 
 # Adresse der Webseite (Traefik-Ingress)
 host: demo.localhost
