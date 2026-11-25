@@ -100,9 +100,17 @@ function Open-DemoTabs {
     Write-Ok "Browser-Tabs geöffnet: $ArgoUrl und $DemoUrl"
 }
 
+# Note: no double quotes inside native arguments - Windows PowerShell 5.1 strips them. Use -o json instead.
+function Get-KubeJson {
+    $r = Invoke-Native kubectl (([string[]]$args) + @('-o', 'json'))
+    if ($r.Code -ne 0) { return $null }
+    $r.Out | ConvertFrom-Json
+}
+
 function Get-CachedImages {
-    $r = Invoke-Native kubectl @('get', 'nodes', '-o', 'jsonpath={range .items[*]}{range .status.images[*]}{.names}{"\n"}{end}{end}')
-    $r.Out
+    $j = Get-KubeJson get nodes
+    if (-not $j) { return '' }
+    (@($j.items | ForEach-Object { $_.status.images } | ForEach-Object { $_.names }) -join "`n")
 }
 
 function Test-ImageCached([string]$Image, [string]$Cache) {

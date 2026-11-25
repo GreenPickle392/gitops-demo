@@ -18,12 +18,11 @@ if ($nodes.Code -eq 0 -and $nodes.Out -match '\sReady\s' -and $nodes.Out -notmat
 else { Fail "Cluster nicht erreichbar oder Node nicht Ready – läuft Docker Desktop?" }
 
 Write-Step "Argo CD"
-$d = Invoke-Native kubectl @('-n', 'argocd', 'get', 'deploy,statefulset', '-o',
-    'jsonpath={range .items[*]}{.metadata.name}={.status.readyReplicas}/{.spec.replicas}{"\n"}{end}')
-if ($d.Code -ne 0 -or -not $d.Out) { Fail "Argo CD nicht installiert – setup.ps1 ausführen" }
+$d = Get-KubeJson -n argocd get 'deploy,statefulset'
+if (-not $d -or @($d.items).Count -eq 0) { Fail "Argo CD nicht installiert – setup.ps1 ausführen" }
 else {
-    $bad = @($d.Out -split "`n" | Where-Object { $_ -and ($_ -split '=')[1] -notmatch '^(\d+)/\1$' })
-    if ($bad.Count -eq 0) { Pass "Alle Argo-CD-Komponenten laufen" } else { Fail "Nicht bereit: $($bad -join ', ')" }
+    $bad = @($d.items | Where-Object { [int]$_.status.readyReplicas -ne [int]$_.spec.replicas } | ForEach-Object { $_.metadata.name })
+    if ($bad.Count -eq 0) { Pass "Alle Argo-CD-Komponenten laufen ($(@($d.items).Count) Workloads)" } else { Fail "Nicht bereit: $($bad -join ', ')" }
 }
 $argo = Get-Http "$ArgoUrl/"
 if ($argo.Status -eq '200') { Pass "Oberfläche erreichbar: $ArgoUrl" } else { Fail "$ArgoUrl antwortet nicht (Status $($argo.Status))" }
