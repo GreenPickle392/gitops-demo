@@ -7,10 +7,10 @@ site:
   title: "Hallo udf-Team!"
   subtitle: "Diese Seite wurde gerade per Git-Commit ausgerollt."
   emoji: "🚀"
-  accentColor: "#ef4444"   # Ideen: "#ef4444" rot, "#22c55e" grün, "#f59e0b" orange, "#06b6d4" türkis
+  accentColor: "#8b5cf6"   # Ideen: "#ef4444" rot, "#22c55e" grün, "#f59e0b" orange, "#06b6d4" türkis
 
 # Anzahl der Pods (Demo: 1 -> 5 hochskalieren)
-replicaCount: 3
+replicaCount: 1
 
 # Version des Webservers (Demo: Update auf "1.29-alpine")
 image:
