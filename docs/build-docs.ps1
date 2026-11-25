@@ -7,7 +7,20 @@
   Usage:  powershell -ExecutionPolicy Bypass -File .\scripts\build-docs.ps1 [-NurAnleitung] [-NurFolien]
 #>
 param([switch]$NurAnleitung, [switch]$NurFolien)
-. "$PSScriptRoot\_lib.ps1"
+$ErrorActionPreference = 'Stop'
+try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
+$RepoRoot = Split-Path -Parent $PSScriptRoot
+function Write-Step([string]$t) { Write-Host ""; Write-Host "> $t" -ForegroundColor Cyan }
+function Write-Ok([string]$t)   { Write-Host "  OK  $t" -ForegroundColor Green }
+function Write-Info([string]$t) { Write-Host "  ..  $t" -ForegroundColor Gray }
+function Stop-Demo([string]$t)  { Write-Host "  FEHLER  $t" -ForegroundColor Red; exit 1 }
+# Run a native tool without PowerShell turning its stderr into errors.
+function Invoke-Native([string]$Exe, [string[]]$Arguments = @()) {
+    $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    try { $out = & $Exe @Arguments 2>&1 | ForEach-Object { "$_" }; $code = $LASTEXITCODE }
+    finally { $ErrorActionPreference = $old }
+    [pscustomobject]@{ Code = $code; Out = (($out | Out-String).Trim()) }
+}
 
 $browser = @("${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe",
              "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe",

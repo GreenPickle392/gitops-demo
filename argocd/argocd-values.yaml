@@ -1,4 +1,4 @@
-# Helm values for the Argo CD chart (argo/argo-cd), tuned for a local demo.
+# Einstellungen für die Argo-CD-Installation (Helm-Chart argo/argo-cd), passend für die lokale Demo.
 global:
   domain: argocd.localhost
 
